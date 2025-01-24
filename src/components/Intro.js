@@ -1,35 +1,86 @@
-import React from 'react';
-import img from '../images/Web-developer.svg';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Intro = () => {
-    return (
-        <>
-                <div className="m-auto max-w-6xl p-2 md:p-12 h-5/6" id='about' >
+const WordPressPosts = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-                    <div className="flex flex-col-reverse lg:flex-row py-8 justify-between lg:text-left" data-aos="fade-up">
-                        <div className="lg:w-1/2 flex flex-col lg:mx-4 justify-center">
-                            <img alt="card img" className="rounded-t float-right" src={img} />
-                        </div>
-                        <div className="flex-col my-4 text-center lg:text-left lg:my-0 lg:justify-end w-full lg:w-1/2 px-8" data-aos="zoom-in" data-aos-delay="500">
-                            
-                            <h3 className="text-3xl  text-blue-900 font-bold">We develop high quality bespoke web and mobile applications for organizations, institutions and SMEs</h3>
-                            <div>
-                                <p className='my-3 text-xl text-gray-600 font-semibold'>Our team is well vast in software development and is ready to help develop the applications of your choice.</p>
-                            </div>
-                            
-                            <div>
-                                <p className='my-3 text-xl text-gray-600 font-semibold'>We take responsibility for building custom software solutions that caters for automation of your business processes and improve efficiency.</p>
-                            </div>
-                            <Link to="/contact" className="text-white bg-blue-900 hover:bg-blue-800 inline-flex items-center justify-center w-full px-6 py-2 my-4 text-lg shadow-xl rounded-2xl sm:w-auto sm:mb-0 group">
-                                Contact us
-                                <svg className="w-4 h-4 ml-1 group-hover: translate-x-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-        </>
-    )
-}
+  useEffect(() => {
+    const controller = new AbortController(); // Abort Controller to cancel fetch on unmount
+    const fetchPosts = async () => {
+      try {
+        // Fetch posts filtered by category ID 14 (News category)
+        const response = await fetch(
+          'https://tanauancity.gov.ph/gad/wp-json/wp/v2/posts?_embed&categories=14', 
+          { signal: controller.signal }
+        );
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
-export default Intro;
+    fetchPosts();
+
+    return () => {
+      controller.abort(); // Cancel fetch on component unmount
+    };
+  }, []);
+
+  if (loading) return <p className="text-center text-gray-700">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+
+  const limitedPosts = posts.slice(0, 6);
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-6 text-black">
+        GENDER AND DEVELOPMENT - NEWS
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {limitedPosts.map((post) => {
+          const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+          return (
+            <div key={post.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+              {featuredImage ? (
+                <img
+                  src={featuredImage}
+                  alt={post.title.rendered}
+                  className="w-full h-48 object-cover"
+                  loading="lazy" // Lazy loading for images
+                />
+              ) : (
+                <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                  No Image Available
+                </div> // Better placeholder feedback
+              )}
+              <div className="p-4">
+                <h2
+                  className="text-xl font-semibold mb-2"
+                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                />
+                <Link
+                  to={`/post/${post.id}`}
+                  className="text-blue-500 hover:underline font-semibold"
+                >
+                  Read More
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default WordPressPosts;

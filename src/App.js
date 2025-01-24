@@ -9,11 +9,13 @@ import {
 } from 'react-router-dom';
 // All pages
 import Home from './pages/Home';
-import Contact from './pages/Contact';
+import Contact from './pages/Articales';
 import DemoProduct from './pages/DemoProduct';
-
-import {useDocTitle} from './components/CustomHook';
+import Database2 from './pages/Database';
+import { useDocTitle } from './components/CustomHook';
 import ScrollToTop from './components/ScrollToTop';
+// Import PostDetail
+import PostDetail from './components/PostDetail';  // Make sure to adjust the path
 
 function App() {
   useEffect(() => {
@@ -23,14 +25,14 @@ function App() {
         duration: 1000,
         easing: 'ease-out-cubic',
       });
-    }
+    };
 
     window.addEventListener('load', () => {
       aos_init();
     });
   }, []);
 
-  useDocTitle("MLD | Molad e Konsult - Bespoke Web and Mobile Applications");
+  useDocTitle("GAD | GENDER AND DEVELOPMENT");
 
   return (
     <>
@@ -38,14 +40,16 @@ function App() {
         <ScrollToTop>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/get-demo" element={<DemoProduct />} /> 
+            <Route path="/Articales" element={<Contact />} />
+            <Route path="/database" element={<Database2 />} />
+            <Route path="/get-demo" element={<DemoProduct />} />
+            {/* Add the new route for post details */}
+            <Route path="/post/:postId" element={<PostDetail />} /> {/* Dynamically fetches postId */}
           </Routes>
         </ScrollToTop>
       </Router>
     </>
   );
 }
-
 
 export default App;

@@ -1,0 +1,94 @@
+/* Top Trends Section */
+.top-trends-container {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f5f5f5; /* Light gray background for contrast */
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    border: 1px solid #ddd; /* Subtle border for separation */
+    margin-bottom: 40px; /* Extra bottom space to separate from content */
+  }
+  
+  /* Top Trends Header */
+  .top-trends-header {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd; /* Clear separation */
+  }
+  
+  /* Individual Top Trend Item */
+  .top-trend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  
+  /* Hover Effect for Trend Items */
+  .top-trend-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Trend Item Title */
+  .top-trend-item .trend-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Trend Item Click Count */
+  .top-trend-item .trend-clicks {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  /* Trend Link Styling */
+  .top-trend-item .trend-link {
+    font-size: 1rem;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .top-trend-item .trend-link:hover {
+    color: #2980b9;
+  }
+  
+  /* Mobile Optimization */
+  @media (max-width: 768px) {
+    .top-trends-container {
+      padding: 15px;
+    }
+  
+    .top-trends-header {
+      font-size: 1.6rem;
+    }
+  
+    .top-trend-item {
+      padding: 12px 15px;
+    }
+  
+    .top-trend-item .trend-title {
+      font-size: 1.2rem;
+    }
+  
+    .top-trend-item .trend-clicks,
+    .top-trend-item .trend-link {
+      font-size: 0.95rem;
+    }
+  }
+  

@@ -4,23 +4,212 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
-body {
+/* General Styles */
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%; /* Ensure full width */
+  background-color: #F8FAFC;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  color: rgb(0, 0, 0); /* Set text color to black */
   font-family: 'Lato', sans-serif;
+  box-sizing: border-box; /* Include padding/borders in element size */
 }
 
+*, *::before, *::after {
+  box-sizing: inherit; /* Apply box-sizing to all elements */
+}
+
+.container {
+  max-width: 100%; /* Prevent container overflow */
+  margin: 0 auto; /* Center container */
+}
+
+.hero, .footer, .cta {
+  width: 100%; /* Ensure full width */
+  background-size: cover; /* Make sure background covers entire section */
+  background-position: center center; /* Ensure proper alignment of background */
+}
+
+/* Gradient Animation for Header */
+.navbar-gradient, .navbar-gradient-red {
+  background: linear-gradient(45deg, #fdfdfd, #820e6d, #ffffff, #b70508);
+  background-size: 400% 400%;
+  animation: wave-gradient-animation 6s ease infinite;
+}
+
+@keyframes wave-gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hero Section */
 .hero {
   background: url(./images/hero-bg.svg) top center no-repeat;
+  height: 400px; /* Adjust as needed */
   background-size: cover;
+  background-position: center;
 }
 
+/* Footer Section */
 .footer {
   background: url(./images/footer.svg) top center no-repeat;
-  background-size: cover;
+  padding: 20px; /* Adjust padding for better spacing */
 }
 
+/* Call-to-Action Section */
 .cta {
-  background: linear-gradient(rgba(2,2,2,.7),rgba(0,0,0,.7)),url(https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80) fixed center center;
+  background: linear-gradient(
+      rgba(2, 2, 2, 0.7),
+      rgba(0, 0, 0, 0.7)
+    ),
+    url(https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80)
+      fixed center center;
+  padding: 30px;
+  background-size: cover;
+  background-position: center;
 }
 
+/* Responsive Design */
+/* For Tablets */
+@media (max-width: 768px) {
+  .hero, .footer, .cta {
+    width: 100%; /* Full width for mobile */
+    padding: 20px; /* Adjust padding for mobile */
+  }
 
+  .hero {
+    height: 300px; /* Reduce hero height */
+  }
+
+  .footer {
+    padding: 15px; /* Adjust footer padding */
+  }
+
+  .navbar-gradient, .navbar-gradient-red {
+    background-size: 300% 300%; /* Adjust gradient size */
+  }
+}
+
+/* For Small Devices (Phones) */
+@media (max-width: 480px) {
+  .cta {
+    padding: 15px; /* Reduce padding for small devices */
+  }
+
+  .footer {
+    padding: 10px; /* Adjust footer padding */
+  }
+
+  .hero {
+    height: 200px; /* Reduce height for small phones */
+  }
+
+  .navbar-gradient, .navbar-gradient-red {
+    background-size: 250% 250%; /* Adjust gradient size */
+  }
+}
+
+/* Navbar Container Styling */
+.navbar-container {
+  width: 100%;
+  position: fixed; /* Keeps navbar fixed at the top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensure it stays above other content */
+}
+
+/* Post detail container */
+.post-detail-container {
+  font-family: 'Arial', sans-serif;
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 20px;
+  margin-top: 70px; /* Add space for the fixed navbar */
+}
+
+/* Styling for the post header */
+.post-header {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  text-align: center; /* Center the title */
+}
+
+/* Post title */
+.post-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  text-align: center; /* Ensure the title is centered */
+}
+
+/* Post metadata (date) */
+.post-meta {
+  font-size: 1rem;
+  color: #777;
+  text-align: center;
+}
+
+/* Post image styling */
+.post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 20px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Post content styling */
+.post-content {
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: #333;
+  text-align: justify;
+}
+
+/* Add some padding to the content for better readability */
+.content-container {
+  padding: 20px;
+}
+
+/* Styling for the loading/error state */
+.loading, .error {
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 20px;
+  color: #333;
+}
+
+/* Navbar Styling */
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center; /* This centers the navbar content */
+  align-items: center; /* This ensures the content is vertically centered */
+  width: 100%;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  margin: 0 10px;
+  font-size: 1.1rem;
+}
+
+.navbar a:hover {
+  background-color: #444;
+  border-radius: 5px;
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
+}
