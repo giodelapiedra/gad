@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import '../appStyles.css';
-import NavBar from '../components/Navbar/NavBar';
+import React, { useState, useEffect } from "react";
+import "../appStyles.css";
+import NavBar from "../components/Navbar/NavBar";
 
+// Card Component for displaying individual resources
 const Card = ({ title, pdfLink }) => (
   <div className="card">
     <div className="card-header">{title}</div>
     <div className="accordion-content">
       {pdfLink ? (
-        <a href={pdfLink} target="_blank" rel="noopener noreferrer">
+        <a href={pdfLink} target="_blank" rel="noopener noreferrer" className="view-pdf-link">
           View PDF
         </a>
       ) : (
@@ -17,37 +18,41 @@ const Card = ({ title, pdfLink }) => (
   </div>
 );
 
+// Security Check Component
+const SecurityCheck = ({ isVisible }) => {
+  if (!isVisible) return null;
+
+  return (
+    <div className="security-check-overlay">
+      <div className="security-check-message">
+        <p>Database Security Check in Progress...</p>
+      </div>
+    </div>
+  );
+};
+
 const App = () => {
   const [resources, setResources] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [securityCheck, setSecurityCheck] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState({});
+  const [showSecurityCheck, setShowSecurityCheck] = useState(true);
 
   useEffect(() => {
-    // Simulate security check
-    setTimeout(() => setSecurityCheck(false), 10000);
-
     const fetchCategoriesAndPosts = async () => {
       try {
         const categoriesResponse = await fetch(
-          'https://tanauancity.gov.ph/gad/wp-json/wp/v2/categories'
+          "https://tanauancity.gov.ph/gad/wp-json/wp/v2/categories"
         );
         const categoriesData = await categoriesResponse.json();
 
-        // Filter desired categories
         const filteredCategories = categoriesData.filter((category) =>
-          ['GAD Code', 'GAD Database', 'IEC Materials', 'Laws on GAD', 'Publications', 'Articles', 'Books', 'Laws on GAD',].includes(category.name)
+          ["GAD Code", "GAD Database", "IEC Materials", "Laws on GAD", "Publications", "Articles", "Books"].includes(category.name)
         );
-
-        if (!filteredCategories.some((category) => category.name === 'Laws on GAD')) {
-          console.warn('Category "Laws on GAD" not found in API response.');
-        }
 
         setCategories(filteredCategories);
 
-        // Fetch posts for each category
         const postsPromises = filteredCategories.map(async (category) => {
           const postsResponse = await fetch(
             `https://tanauancity.gov.ph/gad/wp-json/wp/v2/posts?categories=${category.id}`
@@ -58,7 +63,7 @@ const App = () => {
             const pdfLink = post.content.rendered.match(/href="(.*?\.pdf)"/);
             return {
               title: post.title.rendered,
-              pdfLink: pdfLink ? pdfLink[1] : '',
+              pdfLink: pdfLink ? pdfLink[1] : "",
               category: category.name,
             };
           });
@@ -67,9 +72,12 @@ const App = () => {
         const allResources = await Promise.all(postsPromises);
         setResources(allResources.flat());
       } catch (error) {
-        console.error('Error fetching categories or posts:', error);
+        console.error("Error fetching categories or posts:", error);
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setShowSecurityCheck(false); // Hide the security check after 10 seconds
+        }, 10000);
       }
     };
 
@@ -85,28 +93,44 @@ const App = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-
+  
     if (!query) {
       setExpandedCategories({});
       return;
     }
-
+  
+    const normalizedQuery = query.trim().toLowerCase();  // Normalize the query to lowercase and remove extra spaces
+  
     const newExpandedCategories = {};
     categories.forEach((category) => {
-      const hasMatchingResources = resources.some(
-        (resource) =>
-          resource.category === category.name &&
-          (resource.title.toLowerCase().includes(query.toLowerCase()) ||
-            resource.category.toLowerCase().includes(query.toLowerCase()))
-      );
+      const hasMatchingResources = resources.some((resource) => {
+        const titleLower = resource.title.toLowerCase();  // Normalize resource title
+        return (
+          resource.category.toLowerCase().includes(normalizedQuery) ||  // Normalize category to lowercase
+          titleLower.includes(normalizedQuery)  // Normalize title to lowercase
+        );
+      });
+  
       newExpandedCategories[category.name] = hasMatchingResources;
     });
-
+  
     setExpandedCategories(newExpandedCategories);
   };
 
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        fontFamily: "Arial, sans-serif",
+        paddingTop: "200px",
+        margin: 0,
+        backgroundColor: "#f4f4f4",
+        position: "relative",
+      }}
+    >
+      {/* Security Check Overlay */}
+      <SecurityCheck isVisible={showSecurityCheck} />
+
       <NavBar />
       <header className="App-header">GAD DATABASE</header>
 
@@ -119,20 +143,18 @@ const App = () => {
         />
       </div>
 
-      {securityCheck ? (
-        <div className="security-check">
-          <div className="security-message">Security check in progress...</div>
-        </div>
-      ) : loading ? (
+      {loading ? (
         <div className="loading">Loading...</div>
       ) : (
-        <div className="container">
+        <div className={`container ${showSecurityCheck ? "frozen" : ""}`}>
           {categories.map((category) => {
             const filteredResources = resources.filter(
               (resource) =>
-                resource.category === category.name &&
-                (resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  resource.category.toLowerCase().includes(searchQuery.toLowerCase()))
+                resource.category.toLowerCase() === category.name.toLowerCase() &&  // Ensure case-insensitivity for category
+                (
+                  resource.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                  resource.category.toLowerCase().includes(searchQuery.toLowerCase())
+                )
             );
 
             return (
@@ -140,10 +162,10 @@ const App = () => {
                 <div
                   className="accordion-header"
                   onClick={() => toggleCategory(category.name)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
                   <h2>{category.name}</h2>
-                  <span>{expandedCategories[category.name] ? '-' : '+'}</span>
+                  <span>{expandedCategories[category.name] ? "-" : "+"}</span>
                 </div>
                 {expandedCategories[category.name] && (
                   <div className="accordion-body">

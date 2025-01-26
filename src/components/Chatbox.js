@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import GirlIcon from '../images/girl.svg'; // Import your SVG file
 
 const Chatbox = () => {
     const [messages, setMessages] = useState([
@@ -48,10 +49,16 @@ const Chatbox = () => {
                     title="Click to open Help Chatbot" // Tooltip on hover
                     style={{ zIndex: 9999 }} // Ensure it has a higher z-index to be on top
                 >
-                    <div className="flex flex-col items-center">
-                        <div className="text-6xl text-blue-500 glow-effect">🤖</div> {/* Larger Robot Icon with Glow */}
-                        <p className="text-black mt-2 text-xs font-bold opacity-80 hover:opacity-100 transition-opacity duration-300">Click to open Help Chatbot</p>
-                    </div>
+        <div className="flex flex-col items-center">
+    <img 
+        src={GirlIcon} 
+        alt="Help Chatbot Icon" 
+        className="glow-effect" 
+        style={{ maxWidth: '700%', height: 'auto' }} // Ensure it scales naturally
+    />
+
+</div>
+
                 </div>
             ) : (
                 // Maximized Chatbox
