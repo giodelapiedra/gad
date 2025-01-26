@@ -21,6 +21,7 @@ const Cta = () => {
                     maskImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)',
                     WebkitMaskImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)',
                 }}
+                loading="lazy" // Lazy load the image for better performance
             />
 
             {/* Main Content */}
@@ -61,6 +62,7 @@ const Cta = () => {
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/1024px-Facebook_f_logo_%282019%29.svg.png"
                         alt="Facebook"
                         className="w-10 h-10"
+                        loading="lazy" // Lazy load the icon for better performance
                     />
                 </Link>
 
@@ -70,6 +72,7 @@ const Cta = () => {
                         src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
                         alt="Instagram"
                         className="w-10 h-10"
+                        loading="lazy" // Lazy load the icon for better performance
                     />
                 </Link>
             </div>

@@ -1,9 +1,10 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, memo } from 'react';
 import '../appStyles.css';
 import cellphoneImg from '../images/cellphone.webp'; // Import your cellphone image
 import socialBg from '../images/social.webp'; // Import the social.svg image for background
 
-const MemoizedSocialMediaButtons = React.memo(() => (
+// Memoize Social Media Buttons to avoid unnecessary re-renders
+const MemoizedSocialMediaButtons = memo(() => (
   <div className="social-media-buttons text-center mt-8">
     <a
       href="https://www.facebook.com/GADTanauan"
@@ -89,7 +90,7 @@ const SocialMediaSection = () => (
           src={cellphoneImg}
           alt="Cellphone"
           className="bouncing-cellphone"
-          loading="lazy"
+          loading="lazy" // Lazy load the image to improve performance
           style={{
             width: '90%',
             maxWidth: '1100px',
@@ -98,6 +99,7 @@ const SocialMediaSection = () => (
           }}
         />
       </div>
+      {/* Lazy load the Social Media Buttons */}
       <Suspense fallback={<div>Loading...</div>}>
         <MemoizedSocialMediaButtons />
       </Suspense>

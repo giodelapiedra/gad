@@ -18,14 +18,15 @@ const Card = ({ title, pdfLink }) => (
   </div>
 );
 
-// Security Check Component
-const SecurityCheck = ({ isVisible }) => {
+// Security Check Component with Countdown
+const SecurityCheck = ({ isVisible, countdown }) => {
   if (!isVisible) return null;
 
   return (
     <div className="security-check-overlay">
       <div className="security-check-message">
         <p>Database Security Check in Progress...</p>
+        <p>Time remaining: {countdown} seconds</p>
       </div>
     </div>
   );
@@ -38,6 +39,7 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState({});
   const [showSecurityCheck, setShowSecurityCheck] = useState(true);
+  const [countdown, setCountdown] = useState(10);  // Initialize countdown to 10 seconds
 
   useEffect(() => {
     const fetchCategoriesAndPosts = async () => {
@@ -75,13 +77,24 @@ const App = () => {
         console.error("Error fetching categories or posts:", error);
       } finally {
         setLoading(false);
-        setTimeout(() => {
-          setShowSecurityCheck(false); // Hide the security check after 10 seconds
-        }, 10000);
       }
     };
 
     fetchCategoriesAndPosts();
+
+    // Countdown Logic
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          setShowSecurityCheck(false); // Hide security check after countdown
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdownInterval); // Clean up on component unmount
   }, []);
 
   const toggleCategory = (categoryName) => {
@@ -128,8 +141,8 @@ const App = () => {
         position: "relative",
       }}
     >
-      {/* Security Check Overlay */}
-      <SecurityCheck isVisible={showSecurityCheck} />
+      {/* Security Check Overlay with Countdown */}
+      <SecurityCheck isVisible={showSecurityCheck} countdown={countdown} />
 
       <NavBar />
       <header className="App-header">GAD DATABASE</header>

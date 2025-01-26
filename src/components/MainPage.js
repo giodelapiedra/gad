@@ -1,11 +1,11 @@
 import React, { Suspense, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-
 import heroImg from '../images/web-dev.svg';  
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
-import Chatbox from './Chatbox'; // Import the Chatbox component
 const LazyNavBar = React.lazy(() => import('./Navbar/NavBar'));
+const LazyChatbox = React.lazy(() => import('./Chatbox'));
 
+// Social Media Icons Component (memoized to prevent unnecessary re-renders)
 const SocialMediaIcons = memo(() => (
     <div className="flex justify-center items-center mt-4 mb-8 space-x-6">
         <a href="https://www.facebook.com/gadtanauan" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
@@ -32,10 +32,12 @@ const MainPage = () => {
 
     return (
         <div className="relative bg-gradient-to-t from-[#ff385c] to-[#6b1f79] min-h-screen">
+            {/* Lazy load the Navbar */}
             <Suspense fallback={<div>Loading...</div>}>
                 <LazyNavBar />
             </Suspense>
 
+            {/* Hero Section */}
             <div className="m-auto overflow-hidden mx-4 mt-8 lg:mt-4 p-2 md:p-12 h-full flex items-center justify-center relative z-10">
                 <div id="hero" className="flex flex-col lg:flex-row py-8 justify-between text-center lg:text-left space-y-6 lg:space-y-0">
                     <div className="lg:w-1/2 flex flex-col justify-center text-white" data-aos="fade-up" data-aos-delay="200">
@@ -58,13 +60,18 @@ const MainPage = () => {
                 </div>
             </div>
 
+            {/* Divider Line */}
             <div className="flex justify-center items-center mt-8 mb-4">
                 <div className="w-full max-w-sm border-t border-gray-300"></div>
             </div>
 
+            {/* Social Media Icons */}
             <SocialMediaIcons />
 
-            <Chatbox />
+            {/* Lazy load the Chatbox */}
+            <Suspense fallback={<div>Loading Chatbox...</div>}>
+                <LazyChatbox />
+            </Suspense>
         </div>
     );
 }
